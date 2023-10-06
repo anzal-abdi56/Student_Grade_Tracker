@@ -95,6 +95,28 @@ def add_student(first_name, last_name):
     session.close()
     click.echo(f"Added student: {first_name} {last_name}")
 
+# ... (existing code)
+
+@cli.command()
+@click.option('--student-id', type=int, prompt='Student ID', required=True)
+def delete_student(student_id):
+    session = Session()
+
+    # Retrieve the student to delete based on their ID
+    student = session.query(Student).get(student_id)
+
+    if not student:
+        click.echo(f"Error: Student with ID {student_id} does not exist.")
+        session.close()
+        return
+
+    # Delete the student
+    session.delete(student)
+    session.commit()
+    session.close()
+    click.echo(f"Deleted student: ID {student_id}")
+
+
 @cli.command()
 @click.option('--name', prompt='Course Name')
 @click.option('--department',prompt="Enter department")
