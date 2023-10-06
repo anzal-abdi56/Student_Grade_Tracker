@@ -66,6 +66,16 @@ def cli():
     pass
 
 @cli.command()
+def list_options():
+    click.echo("Available Options:")
+    click.echo("1. Add Student")
+    click.echo("2. Add Course")
+    click.echo("3. Record Grade")
+    click.echo("4. Delete Grade")
+    click.echo("5. List Options")
+    click.echo("6. Exit")
+
+@cli.command()
 @click.option('--first-name', prompt='First Name')
 @click.option('--last-name', prompt='Last Name')
 def add_student(first_name, last_name):
@@ -114,22 +124,27 @@ def record_grade(student_id, course_id, grade):
     session.commit()
     session.close()
     click.echo(f"Recorded grade: Student ID {student_id}, Course ID {course_id}, Grade {grade}")
-    
-@cli.command()
-@click.option('--grade-id', type=int, prompt='Grade ID', help='ID of the grade to delete')
-def delete_grade(grade_id):
-    session = Session()
-    grade = session.query(Grade).get(grade_id)
 
-    if not grade:
-        click.echo(f"Error: Grade with ID {grade_id} does not exist.")
+@cli.command()
+@click.option('--student-id', type=int, prompt='Student ID')
+@click.option('--course-id', type=int, prompt='Course ID')
+def delete_grade(student_id, course_id):
+    session = Session()
+    
+    # Retrieve the grade record to delete
+    grade_record = session.query(Grade).filter_by(student_id=student_id, course_id=course_id).first()
+    
+    # Check if the grade record exists
+    if not grade_record:
+        click.echo(f"Error: No grade record found for Student ID {student_id} and Course ID {course_id}.")
         session.close()
         return
-
-    session.delete(grade)
+    
+    # Delete the grade record
+    session.delete(grade_record)
     session.commit()
     session.close()
-    click.echo(f"Deleted grade with ID {grade_id}")
+    click.echo(f"Deleted grade record: Student ID {student_id}, Course ID {course_id}")
 
 if __name__ == '__main__':
     cli()
