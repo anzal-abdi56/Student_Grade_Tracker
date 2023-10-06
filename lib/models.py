@@ -65,15 +65,6 @@ class Grade(Base):
 def cli():
     pass
 
-@cli.command()
-def list_options():
-    click.echo("Available Options:")
-    click.echo("1. Add Student")
-    click.echo("2. Add Course")
-    click.echo("3. Record Grade")
-    click.echo("4. Delete Grade")
-    click.echo("5. List Options")
-    click.echo("6. Exit")
 
 @cli.command()
 @click.option('--first-name', prompt='First Name')
