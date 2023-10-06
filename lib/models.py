@@ -114,6 +114,22 @@ def record_grade(student_id, course_id, grade):
     session.commit()
     session.close()
     click.echo(f"Recorded grade: Student ID {student_id}, Course ID {course_id}, Grade {grade}")
+    
+@cli.command()
+@click.option('--grade-id', type=int, prompt='Grade ID', help='ID of the grade to delete')
+def delete_grade(grade_id):
+    session = Session()
+    grade = session.query(Grade).get(grade_id)
+
+    if not grade:
+        click.echo(f"Error: Grade with ID {grade_id} does not exist.")
+        session.close()
+        return
+
+    session.delete(grade)
+    session.commit()
+    session.close()
+    click.echo(f"Deleted grade with ID {grade_id}")
 
 if __name__ == '__main__':
     cli()
