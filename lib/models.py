@@ -65,6 +65,24 @@ class Grade(Base):
 def cli():
     pass
 
+# ... (existing code)
+
+@cli.command()
+def list_students():
+    session = Session()
+    
+    # Retrieve a list of all students from the database
+    students = session.query(Student).all()
+    
+    if not students:
+        click.echo("No students found.")
+    else:
+        click.echo("List of Students:")
+        for student in students:
+            click.echo(f"ID: {student.id}, First Name: {student.first_name}, Last Name: {student.last_name}")
+    
+    session.close()
+
 
 @cli.command()
 @click.option('--first-name', prompt='First Name')
